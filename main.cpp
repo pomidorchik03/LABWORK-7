@@ -13,7 +13,7 @@ namespace po = boost::program_options;
 int main(int argc, char* argv[]){
     try
     {
-        po::options_description desc("asdwasd");
+        po::options_description desc("Application for find duplicaties");
         desc.add_options()
                 ("help,h", "Show hint")
                 ("path,p", po::value<std::vector<std::string>>()->multitoken()->default_value({}, "") ,"paths scan")
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
                 ("depth,d", po::value<size_t>()->default_value(0), "depth recursion")
                 ("size_block,b", po::value<size_t>()->default_value(1024), "hashing block size")
                 ("size_file,f", po::value<size_t>()->default_value(1), "minimal file size")
-                ("hash,a", po::value<bool>()->default_value(0), "Hash algorithm: 0 - crc32, 1 - md5");
+                ("hash,a", po::value<bool>()->default_value(0), "Hash algorithm: 0 - MD5, 1 - CRC32");
 
         po::variables_map vm;
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
 
             const auto& hash = vm["hash"].as<bool>();
 
-            controller(paths, exceptions, masks, size_block, depth, size_file);
+            controller(paths, exceptions, masks, size_block, depth, size_file, hash);
         }
     }
     catch(const char* e)
@@ -71,5 +71,6 @@ int main(int argc, char* argv[]){
         std::cerr << e << "\n";
     }
 
+    std::cout << "press enter";
     std::cin.get();
 }

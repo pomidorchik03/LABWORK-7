@@ -3,7 +3,7 @@
 namespace fs = boost::filesystem;
 
 
-void controller(std::unordered_set<boost::filesystem::path, boost::hash<boost::filesystem::path>> paths, std::unordered_set<boost::filesystem::path, boost::hash<boost::filesystem::path>> exceptions, std::vector<std::string> masks, size_t size_block, size_t depth, size_t size_file)
+void controller(std::unordered_set<boost::filesystem::path, boost::hash<boost::filesystem::path>> paths, std::unordered_set<boost::filesystem::path, boost::hash<boost::filesystem::path>> exceptions, std::vector<std::string> masks, size_t size_block, size_t depth, size_t size_file, bool hash_alg)
 {
     try
     {
@@ -20,8 +20,16 @@ void controller(std::unordered_set<boost::filesystem::path, boost::hash<boost::f
 
         for (const auto& file : scanner.get_files())
         {
-            hash = hasher.makeCRC32(read(file), get_size_file(file));
-
+            if (hash_alg)
+            {
+                std::cout << "CRC32";
+                hash = hasher.makeCRC32(read(file), get_size_file(file));
+            }
+            else
+            {
+                std::cout << "MD5";
+                hash = hasher.makeMD5(read(file), get_size_file(file));
+            }
             auto it = duplicates.find(hash);
             if (it != duplicates.end())
             {
