@@ -22,12 +22,10 @@ void controller(std::unordered_set<boost::filesystem::path, boost::hash<boost::f
         {
             if (hash_alg)
             {
-                std::cout << "CRC32";
                 hash = hasher.makeCRC32(read(file), get_size_file(file));
             }
             else
             {
-                std::cout << "MD5";
                 hash = hasher.makeMD5(read(file), get_size_file(file));
             }
             auto it = duplicates.find(hash);
